@@ -1,0 +1,62 @@
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Event } from './Event';
+
+export enum GalleryCategory {
+  EVENT = 'event',
+  VENUE = 'venue',
+  ARTIST = 'artist',
+  OTHER = 'other'
+}
+
+@Entity()
+export class GalleryImage {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  filename!: string;
+
+  @Column()
+  url!: string;
+
+  @Column({ nullable: true })
+  thumbnailUrl?: string;
+
+  @Column({ nullable: true })
+  mediumUrl?: string;
+
+  @Column({ nullable: true })
+  largeUrl?: string;
+
+  @Column({ nullable: true })
+  caption?: string;
+
+  @ManyToOne(() => Event)
+  @JoinColumn()
+  event!: Event;
+
+  @Column({ nullable: true })
+  photographer?: string;
+
+  @Column('simple-array', { nullable: true })
+  tags?: string[];
+
+  @Column({
+    type: 'enum',
+    enum: GalleryCategory,
+    default: GalleryCategory.OTHER
+  })
+  category!: GalleryCategory;
+
+  @Column({ default: 0 })
+  orderIndex!: number;
+
+  @Column({ default: false })
+  isPublished!: boolean;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+} 
