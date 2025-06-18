@@ -32,22 +32,29 @@ This is the backend service for the L8v2 application, built with Node.js, Expres
 4. Build the project:
    ```bash
    npm run build
-   ```
-   or
-   ```bash
+   # or
    yarn build
    ```
 
 ## Development
 
-To start the development server with hot-reload:
+To start the development server with hot-reload and TypeScript support:
 ```bash
 npm run dev
-```
-or
-```bash
+# or
 yarn dev
 ```
+
+- The backend uses [TypeORM](https://typeorm.io/) for database management. You can run TypeORM CLI commands with:
+  ```bash
+  npm run typeorm -- <command>
+  # or
+  yarn typeorm -- <command>
+  ```
+  Example:
+  ```bash
+  npm run typeorm -- migration:run
+  ```
 
 ## Production
 
