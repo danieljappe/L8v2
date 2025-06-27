@@ -3,8 +3,8 @@ import { Ticket } from './Ticket';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   firstName!: string;

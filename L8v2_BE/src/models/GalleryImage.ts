@@ -10,8 +10,8 @@ export enum GalleryCategory {
 
 @Entity()
 export class GalleryImage {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   filename!: string;

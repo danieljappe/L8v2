@@ -7,6 +7,7 @@ import { Ticket } from './models/Ticket';
 import { GalleryImage, GalleryCategory } from './models/GalleryImage';
 import { ContactMessage, MessageType, MessageStatus } from './models/ContactMessage';
 import { EventArtist } from './models/EventArtist';
+import bcrypt from 'bcryptjs';
 
 async function seed() {
   await AppDataSource.initialize();
@@ -14,10 +15,10 @@ async function seed() {
   // USERS
   const userRepo = AppDataSource.getRepository(User);
   const users = await Promise.all([
-    userRepo.create({ firstName: 'Alice', lastName: 'Smith', email: 'alice@example.com', password: 'password1', role: 'user', isActive: true }),
-    userRepo.create({ firstName: 'Bob', lastName: 'Johnson', email: 'bob@example.com', password: 'password2', role: 'user', isActive: true }),
-    userRepo.create({ firstName: 'Carol', lastName: 'Williams', email: 'carol@example.com', password: 'password3', role: 'admin', isActive: true }),
-    userRepo.create({ firstName: 'Dave', lastName: 'Brown', email: 'dave@example.com', password: 'password4', role: 'user', isActive: true }),
+    userRepo.create({ firstName: 'Alice', lastName: 'Smith', email: 'alice@example.com', password: await bcrypt.hash('password1', 10), role: 'user', isActive: true }),
+    userRepo.create({ firstName: 'Bob', lastName: 'Johnson', email: 'bob@example.com', password: await bcrypt.hash('password2', 10), role: 'user', isActive: true }),
+    userRepo.create({ firstName: 'Carol', lastName: 'Williams', email: 'carol@example.com', password: await bcrypt.hash('password3', 10), role: 'admin', isActive: true }),
+    userRepo.create({ firstName: 'Dave', lastName: 'Brown', email: 'dave@example.com', password: await bcrypt.hash('password4', 10), role: 'user', isActive: true }),
   ].map(async u => {
     let existing = await userRepo.findOneBy({ email: u.email });
     if (!existing) return userRepo.save(u);
@@ -27,8 +28,8 @@ async function seed() {
   // ARTISTS
   const artistRepo = AppDataSource.getRepository(Artist);
   const artists = await Promise.all([
-    artistRepo.create({ name: 'The Rockers', bio: 'A rock band.', genre: 'Rock', isActive: true }),
-    artistRepo.create({ name: 'DJ Spin', bio: 'A famous DJ.', genre: 'Electronic', isActive: true }),
+    artistRepo.create({ name: 'Chrome!', bio: 'Chrome! er en dansk undergrunds rapper', genre: 'Opium', isActive: true }),
+    artistRepo.create({ name: 'Skomager', bio: 'Skomager er også en dansk undergrunds rapper', genre: 'Opium', isActive: true }),
     artistRepo.create({ name: 'Jazz Cats', bio: 'Smooth jazz group.', genre: 'Jazz', isActive: true }),
     artistRepo.create({ name: 'Pop Stars', bio: 'Top pop artists.', genre: 'Pop', isActive: true }),
   ].map(async a => {
@@ -40,10 +41,7 @@ async function seed() {
   // VENUES
   const venueRepo = AppDataSource.getRepository(Venue);
   const venues = await Promise.all([
-    venueRepo.create({ name: 'Grand Hall', description: 'A large concert hall.', address: '123 Main St', city: 'Metropolis', state: 'NY', country: 'USA', zipCode: '10001', capacity: 1000, isActive: true }),
-    venueRepo.create({ name: 'Open Air Arena', description: 'Outdoor venue.', address: '456 Park Ave', city: 'Metropolis', state: 'NY', country: 'USA', zipCode: '10002', capacity: 5000, isActive: true }),
-    venueRepo.create({ name: 'Jazz Club', description: 'Intimate jazz club.', address: '789 Jazz St', city: 'Metropolis', state: 'NY', country: 'USA', zipCode: '10003', capacity: 200, isActive: true }),
-    venueRepo.create({ name: 'Downtown Theater', description: 'Historic theater.', address: '101 Center Rd', city: 'Metropolis', state: 'NY', country: 'USA', zipCode: '10004', capacity: 800, isActive: true }),
+    venueRepo.create({ name: 'Rust', description: 'A large concert hall.', address: '123 Main St', city: 'Metropolis', state: 'NY', country: 'USA', zipCode: '10001', capacity: 1000, isActive: true }),
   ].map(async v => {
     let existing = await venueRepo.findOneBy({ name: v.name });
     if (!existing) return venueRepo.save(v);
@@ -53,10 +51,8 @@ async function seed() {
   // EVENTS
   const eventRepo = AppDataSource.getRepository(Event);
   const events = await Promise.all([
-    eventRepo.create({ title: 'Rock Night', description: 'A night of rock music.', date: new Date('2024-08-01'), startTime: '19:00', endTime: '23:00', ticketPrice: 50, totalTickets: 500, venue: venues[0], isActive: true }),
-    eventRepo.create({ title: 'Electronic Fest', description: 'Dance all night.', date: new Date('2024-08-10'), startTime: '20:00', endTime: '03:00', ticketPrice: 60, totalTickets: 1000, venue: venues[1], isActive: true }),
-    eventRepo.create({ title: 'Jazz Evening', description: 'Smooth jazz performances.', date: new Date('2024-08-15'), startTime: '18:00', endTime: '22:00', ticketPrice: 40, totalTickets: 200, venue: venues[2], isActive: true }),
-    eventRepo.create({ title: 'Pop Gala', description: 'Pop music extravaganza.', date: new Date('2024-08-20'), startTime: '19:30', endTime: '23:30', ticketPrice: 70, totalTickets: 800, venue: venues[3], isActive: true }),
+    eventRepo.create({ title: 'CHROME! + SKOMAGER', description: 'Chrome og Skomager koncert på Rust.', date: new Date('2025-08-16'), startTime: '19:30', endTime: '23:00', ticketPrice: 50, totalTickets: 500, venue: venues[0], isActive: true }),
+    eventRepo.create({ title: 'L8 Events @ Distortion', description: 'L8 Events overtager selveste distortion på Nørrebronx.', date: new Date('2025-06-07'), startTime: '20:00', endTime: '03:00', ticketPrice: 60, totalTickets: 1000, venue: venues[1], isActive: true }),
   ].map(async e => {
     let existing = await eventRepo.findOneBy({ title: e.title });
     if (!existing) return eventRepo.save(e);
@@ -67,9 +63,7 @@ async function seed() {
   const eventArtistRepo = AppDataSource.getRepository(EventArtist);
   const eventArtists = await Promise.all([
     eventArtistRepo.create({ event: events[0], artist: artists[0], performanceOrder: 1, performanceTime: '20:00', setDuration: 60, fee: 1000 }),
-    eventArtistRepo.create({ event: events[1], artist: artists[1], performanceOrder: 1, performanceTime: '21:00', setDuration: 90, fee: 2000 }),
-    eventArtistRepo.create({ event: events[2], artist: artists[2], performanceOrder: 1, performanceTime: '19:00', setDuration: 45, fee: 800 }),
-    eventArtistRepo.create({ event: events[3], artist: artists[3], performanceOrder: 1, performanceTime: '20:00', setDuration: 75, fee: 1500 }),
+    eventArtistRepo.create({ event: events[0], artist: artists[1], performanceOrder: 2, performanceTime: '21:00', setDuration: 90, fee: 2000 }),
   ].map(async ea => {
     let existing = await eventArtistRepo.findOneBy({ event: { id: ea.event.id }, artist: { id: ea.artist.id } });
     if (!existing) return eventArtistRepo.save(ea);
@@ -80,9 +74,6 @@ async function seed() {
   const ticketRepo = AppDataSource.getRepository(Ticket);
   const tickets = await Promise.all([
     ticketRepo.create({ event: events[0], user: users[0], ticketNumber: 'TICK-1001', price: 50, isUsed: false, isActive: true, quantity: 1, sold: 0 }),
-    ticketRepo.create({ event: events[1], user: users[1], ticketNumber: 'TICK-1002', price: 60, isUsed: false, isActive: true, quantity: 1, sold: 0 }),
-    ticketRepo.create({ event: events[2], user: users[2], ticketNumber: 'TICK-1003', price: 40, isUsed: false, isActive: true, quantity: 1, sold: 0 }),
-    ticketRepo.create({ event: events[3], user: users[3], ticketNumber: 'TICK-1004', price: 70, isUsed: false, isActive: true, quantity: 1, sold: 0 }),
   ].map(async t => {
     let existing = await ticketRepo.findOneBy({ ticketNumber: t.ticketNumber });
     if (!existing) return ticketRepo.save(t);

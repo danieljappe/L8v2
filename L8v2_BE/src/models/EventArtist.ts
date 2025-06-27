@@ -4,8 +4,8 @@ import { Artist } from './Artist';
 
 @Entity()
 export class EventArtist {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @ManyToOne(() => Event, event => event.eventArtists)
   @JoinColumn()

@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { AppDataSource } from '../config/database';
 import { Venue } from '../models/Venue';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 const router = Router();
 const venueRepository = AppDataSource.getRepository(Venue);
@@ -8,6 +9,90 @@ const venueRepository = AppDataSource.getRepository(Venue);
 interface VenueParams {
   id: string;
 }
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Venues
+ *     description: Venue management
+ * /api/venues:
+ *   get:
+ *     summary: Retrieve a list of venues
+ *     tags: [Venues]
+ *     responses:
+ *       200:
+ *         description: A list of venues
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *   post:
+ *     summary: Create a new venue
+ *     tags: [Venues]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: Venue created
+ *       500:
+ *         description: Error creating venue
+ *
+ * /api/venues/{id}:
+ *   get:
+ *     summary: Get a venue by ID
+ *     tags: [Venues]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Venue found
+ *       404:
+ *         description: Venue not found
+ *   put:
+ *     summary: Update a venue by ID
+ *     tags: [Venues]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Venue updated
+ *       404:
+ *         description: Venue not found
+ *   delete:
+ *     summary: Delete a venue by ID
+ *     tags: [Venues]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Venue deleted
+ *       404:
+ *         description: Venue not found
+ */
 
 // Get all venues
 const getAllVenues: RequestHandler = async (_req, res) => {
@@ -22,10 +107,10 @@ const getAllVenues: RequestHandler = async (_req, res) => {
 };
 
 // Get venue by ID
-const getVenueById: RequestHandler<VenueParams> = async (req, res) => {
+const getVenueById: RequestHandler = async (req, res) => {
   try {
     const venue = await venueRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['events']
     });
     if (!venue) {
@@ -50,10 +135,10 @@ const createVenue: RequestHandler = async (req, res) => {
 };
 
 // Update venue
-const updateVenue: RequestHandler<VenueParams> = async (req, res) => {
+const updateVenue: RequestHandler = async (req, res) => {
   try {
     const venue = await venueRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['events']
     });
     if (!venue) {
@@ -69,10 +154,10 @@ const updateVenue: RequestHandler<VenueParams> = async (req, res) => {
 };
 
 // Delete venue
-const deleteVenue: RequestHandler<VenueParams> = async (req, res) => {
+const deleteVenue: RequestHandler = async (req, res) => {
   try {
     const venue = await venueRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['events']
     });
     if (!venue) {
@@ -88,8 +173,8 @@ const deleteVenue: RequestHandler<VenueParams> = async (req, res) => {
 
 router.get('/', getAllVenues);
 router.get('/:id', getVenueById);
-router.post('/', createVenue);
-router.put('/:id', updateVenue);
-router.delete('/:id', deleteVenue);
+router.post('/', authenticateJWT, createVenue);
+router.put('/:id', authenticateJWT, updateVenue);
+router.delete('/:id', authenticateJWT, deleteVenue);
 
 export default router; 

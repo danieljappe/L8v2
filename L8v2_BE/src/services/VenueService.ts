@@ -12,7 +12,7 @@ export class VenueService {
     return this.venueRepository.findAll();
   }
 
-  async getVenueById(id: number): Promise<Venue | null> {
+  async getVenueById(id: string): Promise<Venue | null> {
     return this.venueRepository.findById(id);
   }
 
@@ -20,11 +20,11 @@ export class VenueService {
     return this.venueRepository.create(venueData);
   }
 
-  async updateVenue(id: number, venueData: Partial<Venue>): Promise<Venue | null> {
+  async updateVenue(id: string, venueData: Partial<Venue>): Promise<Venue | null> {
     return this.venueRepository.update(id, venueData);
   }
 
-  async deleteVenue(id: number): Promise<void> {
+  async deleteVenue(id: string): Promise<void> {
     return this.venueRepository.delete(id);
   }
 
@@ -45,19 +45,19 @@ export class VenueService {
     return this.venueRepository.findActiveVenues();
   }
 
-  async deactivateVenue(id: number): Promise<Venue | null> {
+  async deactivateVenue(id: string): Promise<Venue | null> {
     return this.venueRepository.update(id, { isActive: false });
   }
 
-  async activateVenue(id: number): Promise<Venue | null> {
+  async activateVenue(id: string): Promise<Venue | null> {
     return this.venueRepository.update(id, { isActive: true });
   }
 
-  async updateVenueCapacity(id: number, capacity: number): Promise<Venue | null> {
+  async updateVenueCapacity(id: string, capacity: number): Promise<Venue | null> {
     return this.venueRepository.update(id, { capacity });
   }
 
-  async addVenueImage(id: number, imageUrl: string): Promise<Venue | null> {
+  async addVenueImage(id: string, imageUrl: string): Promise<Venue | null> {
     const venue = await this.venueRepository.findById(id);
     if (!venue) return null;
 
@@ -67,7 +67,7 @@ export class VenueService {
     return this.venueRepository.update(id, { images });
   }
 
-  async removeVenueImage(id: number, imageUrl: string): Promise<Venue | null> {
+  async removeVenueImage(id: string, imageUrl: string): Promise<Venue | null> {
     const venue = await this.venueRepository.findById(id);
     if (!venue) return null;
 

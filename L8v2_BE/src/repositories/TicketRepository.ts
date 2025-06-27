@@ -7,13 +7,13 @@ export class TicketRepository extends BaseRepository<Ticket> {
     super(Ticket);
   }
 
-  async findByEvent(eventId: number): Promise<Ticket[]> {
+  async findByEvent(eventId: string): Promise<Ticket[]> {
     return this.repository.findBy({
       event: { id: eventId }
     } as FindOptionsWhere<Ticket>);
   }
 
-  async findByUser(userId: number): Promise<Ticket[]> {
+  async findByUser(userId: string): Promise<Ticket[]> {
     return this.repository.findBy({
       user: { id: userId }
     } as FindOptionsWhere<Ticket>);

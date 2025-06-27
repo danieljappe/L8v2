@@ -1,13 +1,94 @@
 import { Router, RequestHandler } from 'express';
 import { AppDataSource } from '../config/database';
 import { EventArtist } from '../models/EventArtist';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 const router = Router();
 const eventArtistRepository = AppDataSource.getRepository(EventArtist);
 
-interface EventArtistParams {
-  id: string;
-}
+/**
+ * @swagger
+ * tags:
+ *   - name: Event-Artists
+ *     description: Event-Artist relationship management
+ * /api/event-artists:
+ *   get:
+ *     summary: Retrieve a list of event-artist relationships
+ *     tags: [Event-Artists]
+ *     responses:
+ *       200:
+ *         description: A list of event-artist relationships
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *   post:
+ *     summary: Create a new event-artist relationship
+ *     tags: [Event-Artists]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: Event-artist relationship created
+ *       500:
+ *         description: Error creating event-artist relationship
+ *
+ * /api/event-artists/{id}:
+ *   get:
+ *     summary: Get an event-artist relationship by ID
+ *     tags: [Event-Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Event-artist relationship found
+ *       404:
+ *         description: Event-artist relationship not found
+ *   put:
+ *     summary: Update an event-artist relationship by ID
+ *     tags: [Event-Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Event-artist relationship updated
+ *       404:
+ *         description: Event-artist relationship not found
+ *   delete:
+ *     summary: Delete an event-artist relationship by ID
+ *     tags: [Event-Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Event-artist relationship deleted
+ *       404:
+ *         description: Event-artist relationship not found
+ */
 
 // Get all event artists
 const getAllEventArtists: RequestHandler = async (_req, res) => {
@@ -22,10 +103,10 @@ const getAllEventArtists: RequestHandler = async (_req, res) => {
 };
 
 // Get event artist by ID
-const getEventArtistById: RequestHandler<EventArtistParams> = async (req, res) => {
+const getEventArtistById: RequestHandler = async (req, res) => {
   try {
     const eventArtist = await eventArtistRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event', 'artist']
     });
     if (!eventArtist) {
@@ -50,10 +131,10 @@ const createEventArtist: RequestHandler = async (req, res) => {
 };
 
 // Update event artist
-const updateEventArtist: RequestHandler<EventArtistParams> = async (req, res) => {
+const updateEventArtist: RequestHandler = async (req, res) => {
   try {
     const eventArtist = await eventArtistRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event', 'artist']
     });
     if (!eventArtist) {
@@ -69,10 +150,10 @@ const updateEventArtist: RequestHandler<EventArtistParams> = async (req, res) =>
 };
 
 // Delete event artist
-const deleteEventArtist: RequestHandler<EventArtistParams> = async (req, res) => {
+const deleteEventArtist: RequestHandler = async (req, res) => {
   try {
     const eventArtist = await eventArtistRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event', 'artist']
     });
     if (!eventArtist) {
@@ -88,8 +169,8 @@ const deleteEventArtist: RequestHandler<EventArtistParams> = async (req, res) =>
 
 router.get('/', getAllEventArtists);
 router.get('/:id', getEventArtistById);
-router.post('/', createEventArtist);
-router.put('/:id', updateEventArtist);
-router.delete('/:id', deleteEventArtist);
+router.post('/', authenticateJWT, createEventArtist);
+router.put('/:id', authenticateJWT, updateEventArtist);
+router.delete('/:id', authenticateJWT, deleteEventArtist);
 
 export default router; 

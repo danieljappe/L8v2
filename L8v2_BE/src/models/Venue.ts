@@ -3,8 +3,8 @@ import { Event } from './Event';
 
 @Entity()
 export class Venue {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   name!: string;

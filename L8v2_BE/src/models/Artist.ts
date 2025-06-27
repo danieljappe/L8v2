@@ -3,8 +3,8 @@ import { EventArtist } from './EventArtist';
 
 @Entity()
 export class Artist {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   name!: string;

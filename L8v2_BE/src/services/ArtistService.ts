@@ -12,7 +12,7 @@ export class ArtistService {
     return this.artistRepository.findAll();
   }
 
-  async getArtistById(id: number): Promise<Artist | null> {
+  async getArtistById(id: string): Promise<Artist | null> {
     return this.artistRepository.findById(id);
   }
 
@@ -20,11 +20,11 @@ export class ArtistService {
     return this.artistRepository.create(artistData);
   }
 
-  async updateArtist(id: number, artistData: Partial<Artist>): Promise<Artist | null> {
+  async updateArtist(id: string, artistData: Partial<Artist>): Promise<Artist | null> {
     return this.artistRepository.update(id, artistData);
   }
 
-  async deleteArtist(id: number): Promise<void> {
+  async deleteArtist(id: string): Promise<void> {
     return this.artistRepository.delete(id);
   }
 
@@ -45,15 +45,15 @@ export class ArtistService {
     return this.artistRepository.findArtistsByRating(minRating);
   }
 
-  async deactivateArtist(id: number): Promise<Artist | null> {
+  async deactivateArtist(id: string): Promise<Artist | null> {
     return this.artistRepository.update(id, { isActive: false });
   }
 
-  async activateArtist(id: number): Promise<Artist | null> {
+  async activateArtist(id: string): Promise<Artist | null> {
     return this.artistRepository.update(id, { isActive: true });
   }
 
-  async updateArtistRating(id: number, rating: number): Promise<Artist | null> {
+  async updateArtistRating(id: string, rating: number): Promise<Artist | null> {
     if (rating < 0 || rating > 5) {
       throw new Error('Rating must be between 0 and 5');
     }

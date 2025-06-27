@@ -13,7 +13,7 @@ export class UserService {
     return this.userRepository.findAll();
   }
 
-  async getUserById(id: number): Promise<User | null> {
+  async getUserById(id: string): Promise<User | null> {
     return this.userRepository.findById(id);
   }
 
@@ -24,14 +24,14 @@ export class UserService {
     return this.userRepository.create(userData);
   }
 
-  async updateUser(id: number, userData: Partial<User>): Promise<User | null> {
+  async updateUser(id: string, userData: Partial<User>): Promise<User | null> {
     if (userData.password) {
       userData.password = await bcrypt.hash(userData.password, 10);
     }
     return this.userRepository.update(id, userData);
   }
 
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: string): Promise<void> {
     return this.userRepository.delete(id);
   }
 
@@ -43,11 +43,11 @@ export class UserService {
     return isValid ? user : null;
   }
 
-  async deactivateUser(id: number): Promise<User | null> {
+  async deactivateUser(id: string): Promise<User | null> {
     return this.userRepository.update(id, { isActive: false });
   }
 
-  async activateUser(id: number): Promise<User | null> {
+  async activateUser(id: string): Promise<User | null> {
     return this.userRepository.update(id, { isActive: true });
   }
 } 

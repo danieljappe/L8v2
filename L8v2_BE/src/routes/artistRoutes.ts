@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { AppDataSource } from '../config/database';
 import { Artist } from '../models/Artist';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 const router = Router();
 const artistRepository = AppDataSource.getRepository(Artist);
@@ -8,6 +9,93 @@ const artistRepository = AppDataSource.getRepository(Artist);
 interface ArtistParams {
   id: string;
 }
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Artists
+ *     description: Artist management
+ * /api/artists:
+ *   get:
+ *     summary: Retrieve a list of artists
+ *     tags: [Artists]
+ *     responses:
+ *       200:
+ *         description: A list of artists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *   post:
+ *     summary: Create a new artist
+ *     tags: [Artists]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: Artist created
+ *       500:
+ *         description: Error creating artist
+ *
+ * /api/artists/{id}:
+ *   get:
+ *     summary: Get an artist by ID
+ *     tags: [Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Artist found
+ *       404:
+ *         description: Artist not found
+ *   put:
+ *     summary: Update an artist by ID
+ *     tags: [Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Artist updated
+ *       404:
+ *         description: Artist not found
+ *   delete:
+ *     summary: Delete an artist by ID
+ *     tags: [Artists]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Artist deleted
+ *       404:
+ *         description: Artist not found
+ */
 
 // Get all artists
 const getAllArtists: RequestHandler = async (_req, res) => {
@@ -20,9 +108,9 @@ const getAllArtists: RequestHandler = async (_req, res) => {
 };
 
 // Get artist by ID
-const getArtistById: RequestHandler<ArtistParams> = async (req, res) => {
+const getArtistById: RequestHandler = async (req, res) => {
   try {
-    const artist = await artistRepository.findOne({ where: { id: parseInt(req.params.id) } });
+    const artist = await artistRepository.findOne({ where: { id: req.params.id } });
     if (!artist) {
       res.status(404).json({ message: 'Artist not found' });
       return;
@@ -45,9 +133,9 @@ const createArtist: RequestHandler = async (req, res) => {
 };
 
 // Update artist
-const updateArtist: RequestHandler<ArtistParams> = async (req, res) => {
+const updateArtist: RequestHandler = async (req, res) => {
   try {
-    const artist = await artistRepository.findOne({ where: { id: parseInt(req.params.id) } });
+    const artist = await artistRepository.findOne({ where: { id: req.params.id } });
     if (!artist) {
       res.status(404).json({ message: 'Artist not found' });
       return;
@@ -61,9 +149,9 @@ const updateArtist: RequestHandler<ArtistParams> = async (req, res) => {
 };
 
 // Delete artist
-const deleteArtist: RequestHandler<ArtistParams> = async (req, res) => {
+const deleteArtist: RequestHandler = async (req, res) => {
   try {
-    const artist = await artistRepository.findOne({ where: { id: parseInt(req.params.id) } });
+    const artist = await artistRepository.findOne({ where: { id: req.params.id } });
     if (!artist) {
       res.status(404).json({ message: 'Artist not found' });
       return;
@@ -77,8 +165,8 @@ const deleteArtist: RequestHandler<ArtistParams> = async (req, res) => {
 
 router.get('/', getAllArtists);
 router.get('/:id', getArtistById);
-router.post('/', createArtist);
-router.put('/:id', updateArtist);
-router.delete('/:id', deleteArtist);
+router.post('/', authenticateJWT, createArtist);
+router.put('/:id', authenticateJWT, updateArtist);
+router.delete('/:id', authenticateJWT, deleteArtist);
 
 export default router; 

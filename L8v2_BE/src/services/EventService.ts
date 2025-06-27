@@ -12,7 +12,7 @@ export class EventService {
     return this.eventRepository.findAll();
   }
 
-  async getEventById(id: number): Promise<Event | null> {
+  async getEventById(id: string): Promise<Event | null> {
     return this.eventRepository.findById(id);
   }
 
@@ -20,19 +20,19 @@ export class EventService {
     return this.eventRepository.create(eventData);
   }
 
-  async updateEvent(id: number, eventData: Partial<Event>): Promise<Event | null> {
+  async updateEvent(id: string, eventData: Partial<Event>): Promise<Event | null> {
     return this.eventRepository.update(id, eventData);
   }
 
-  async deleteEvent(id: number): Promise<void> {
+  async deleteEvent(id: string): Promise<void> {
     return this.eventRepository.delete(id);
   }
 
-  async findEventsByVenue(venueId: number): Promise<Event[]> {
+  async findEventsByVenue(venueId: string): Promise<Event[]> {
     return this.eventRepository.findByVenue(venueId);
   }
 
-  async findEventsByArtist(artistId: number): Promise<Event[]> {
+  async findEventsByArtist(artistId: string): Promise<Event[]> {
     return this.eventRepository.findByArtist(artistId);
   }
 
@@ -48,15 +48,15 @@ export class EventService {
     return this.eventRepository.findPastEvents();
   }
 
-  async updateEventStatus(id: number, status: string): Promise<Event | null> {
+  async updateEventStatus(id: string, status: string): Promise<Event | null> {
     return this.eventRepository.update(id, { status });
   }
 
-  async updateEventCapacity(id: number, capacity: number): Promise<Event | null> {
+  async updateEventCapacity(id: string, capacity: number): Promise<Event | null> {
     return this.eventRepository.update(id, { capacity });
   }
 
-  async updateEventAttendees(id: number, currentAttendees: number): Promise<Event | null> {
+  async updateEventAttendees(id: string, currentAttendees: number): Promise<Event | null> {
     const event = await this.eventRepository.findById(id);
     if (!event) return null;
 

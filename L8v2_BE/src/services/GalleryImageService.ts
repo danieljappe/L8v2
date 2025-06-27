@@ -12,7 +12,7 @@ export class GalleryImageService {
     return this.galleryImageRepository.findAll();
   }
 
-  async getImageById(id: number): Promise<GalleryImage | null> {
+  async getImageById(id: string): Promise<GalleryImage | null> {
     return this.galleryImageRepository.findById(id);
   }
 
@@ -20,15 +20,15 @@ export class GalleryImageService {
     return this.galleryImageRepository.create(imageData);
   }
 
-  async updateImage(id: number, imageData: Partial<GalleryImage>): Promise<GalleryImage | null> {
+  async updateImage(id: string, imageData: Partial<GalleryImage>): Promise<GalleryImage | null> {
     return this.galleryImageRepository.update(id, imageData);
   }
 
-  async deleteImage(id: number): Promise<void> {
+  async deleteImage(id: string): Promise<void> {
     return this.galleryImageRepository.delete(id);
   }
 
-  async findImagesByEvent(eventId: number): Promise<GalleryImage[]> {
+  async findImagesByEvent(eventId: string): Promise<GalleryImage[]> {
     return this.galleryImageRepository.findByEvent(eventId);
   }
 
@@ -56,26 +56,26 @@ export class GalleryImageService {
     return this.galleryImageRepository.findImagesByDateRange(startDate, endDate);
   }
 
-  async publishImage(id: number): Promise<GalleryImage | null> {
+  async publishImage(id: string): Promise<GalleryImage | null> {
     return this.galleryImageRepository.update(id, { isPublished: true });
   }
 
-  async unpublishImage(id: number): Promise<GalleryImage | null> {
+  async unpublishImage(id: string): Promise<GalleryImage | null> {
     return this.galleryImageRepository.update(id, { isPublished: false });
   }
 
-  async updateImageOrder(id: number, orderIndex: number): Promise<GalleryImage | null> {
+  async updateImageOrder(id: string, orderIndex: number): Promise<GalleryImage | null> {
     return this.galleryImageRepository.update(id, { orderIndex });
   }
 
-  async updateImageTags(id: number, tags: string[]): Promise<GalleryImage | null> {
+  async updateImageTags(id: string, tags: string[]): Promise<GalleryImage | null> {
     const image = await this.galleryImageRepository.findById(id);
     if (!image) return null;
 
     return this.galleryImageRepository.update(id, { tags });
   }
 
-  async updateImageUrls(id: number, urls: { thumbnailUrl?: string; mediumUrl?: string; largeUrl?: string }): Promise<GalleryImage | null> {
+  async updateImageUrls(id: string, urls: { thumbnailUrl?: string; mediumUrl?: string; largeUrl?: string }): Promise<GalleryImage | null> {
     return this.galleryImageRepository.update(id, urls);
   }
 } 

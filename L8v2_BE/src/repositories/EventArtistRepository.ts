@@ -7,26 +7,26 @@ export class EventArtistRepository extends BaseRepository<EventArtist> {
     super(EventArtist);
   }
 
-  async findByEvent(eventId: number): Promise<EventArtist[]> {
+  async findByEvent(eventId: string): Promise<EventArtist[]> {
     return this.repository.findBy({
       event: { id: eventId }
-    } as FindOptionsWhere<EventArtist>);
+    });
   }
 
-  async findByArtist(artistId: number): Promise<EventArtist[]> {
+  async findByArtist(artistId: string): Promise<EventArtist[]> {
     return this.repository.findBy({
       artist: { id: artistId }
-    } as FindOptionsWhere<EventArtist>);
+    });
   }
 
-  async findByEventAndArtist(eventId: number, artistId: number): Promise<EventArtist | null> {
+  async findByEventAndArtist(eventId: string, artistId: string): Promise<EventArtist | null> {
     return this.repository.findOneBy({
       event: { id: eventId },
       artist: { id: artistId }
-    } as FindOptionsWhere<EventArtist>);
+    });
   }
 
-  async findArtistsByPerformanceOrder(eventId: number): Promise<EventArtist[]> {
+  async findArtistsByPerformanceOrder(eventId: string): Promise<EventArtist[]> {
     return this.repository.find({
       where: {
         event: { id: eventId }
@@ -37,7 +37,7 @@ export class EventArtistRepository extends BaseRepository<EventArtist> {
     });
   }
 
-  async findArtistsByPerformanceTime(eventId: number): Promise<EventArtist[]> {
+  async findArtistsByPerformanceTime(eventId: string): Promise<EventArtist[]> {
     return this.repository.find({
       where: {
         event: { id: eventId }

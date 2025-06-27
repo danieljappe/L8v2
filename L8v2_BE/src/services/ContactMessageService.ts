@@ -13,7 +13,7 @@ export class ContactMessageService {
     return await this.repository.save(message);
   }
 
-  async findMessageById(id: number): Promise<ContactMessage | null> {
+  async findMessageById(id: string): Promise<ContactMessage | null> {
     return this.repository.findById(id);
   }
 
@@ -21,7 +21,7 @@ export class ContactMessageService {
     return this.repository.findAll();
   }
 
-  async updateMessage(id: number, data: Partial<ContactMessage>): Promise<ContactMessage | null> {
+  async updateMessage(id: string, data: Partial<ContactMessage>): Promise<ContactMessage | null> {
     const message = await this.findMessageById(id);
     if (!message) {
       return null;
@@ -30,7 +30,7 @@ export class ContactMessageService {
     return await this.repository.save(message);
   }
 
-  async deleteMessage(id: number): Promise<boolean> {
+  async deleteMessage(id: string): Promise<boolean> {
     const message = await this.findMessageById(id);
     if (!message) {
       return false;
@@ -71,7 +71,7 @@ export class ContactMessageService {
     return this.repository.findMessagesByDateRange(startDate, endDate);
   }
 
-  async markMessageAsRead(id: number): Promise<ContactMessage | null> {
+  async markMessageAsRead(id: string): Promise<ContactMessage | null> {
     const message = await this.findMessageById(id);
     if (!message) {
       return null;
@@ -81,7 +81,7 @@ export class ContactMessageService {
     return await this.repository.save(message);
   }
 
-  async markMessageAsReplied(id: number, adminNotes?: string): Promise<ContactMessage | null> {
+  async markMessageAsReplied(id: string, adminNotes?: string): Promise<ContactMessage | null> {
     const message = await this.findMessageById(id);
     if (!message) {
       return null;
@@ -94,7 +94,7 @@ export class ContactMessageService {
     return await this.repository.save(message);
   }
 
-  async archiveMessage(id: number): Promise<ContactMessage | null> {
+  async archiveMessage(id: string): Promise<ContactMessage | null> {
     const message = await this.findMessageById(id);
     if (!message) {
       return null;

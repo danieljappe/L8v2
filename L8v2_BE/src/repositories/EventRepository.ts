@@ -25,13 +25,13 @@ export class EventRepository extends BaseRepository<Event> {
     } as FindOptionsWhere<Event>);
   }
 
-  async findByVenue(venueId: number): Promise<Event[]> {
+  async findByVenue(venueId: string): Promise<Event[]> {
     return this.repository.findBy({
       venue: { id: venueId }
     } as FindOptionsWhere<Event>);
   }
 
-  async findByArtist(artistId: number): Promise<Event[]> {
+  async findByArtist(artistId: string): Promise<Event[]> {
     return this.repository.findBy({
       artists: { id: artistId }
     } as FindOptionsWhere<Event>);

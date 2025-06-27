@@ -12,7 +12,7 @@ export class BaseRepository<T extends ObjectLiteral> {
     return this.repository.find();
   }
 
-  async findById(id: number): Promise<T | null> {
+  async findById(id: string): Promise<T | null> {
     return this.repository.findOneBy({ id } as unknown as FindOptionsWhere<T>);
   }
 
@@ -25,12 +25,12 @@ export class BaseRepository<T extends ObjectLiteral> {
     return this.repository.save(entity);
   }
 
-  async update(id: number, data: DeepPartial<T>): Promise<T | null> {
+  async update(id: string, data: DeepPartial<T>): Promise<T | null> {
     await this.repository.update(id, data as any);
     return this.findById(id);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.repository.delete(id);
   }
 } 

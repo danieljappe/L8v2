@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { AppDataSource } from '../config/database';
 import { GalleryImage } from '../models/GalleryImage';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 const router = Router();
 const galleryImageRepository = AppDataSource.getRepository(GalleryImage);
@@ -8,6 +9,90 @@ const galleryImageRepository = AppDataSource.getRepository(GalleryImage);
 interface GalleryImageParams {
   id: string;
 }
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Gallery
+ *     description: Gallery image management
+ * /api/gallery:
+ *   get:
+ *     summary: Retrieve a list of gallery images
+ *     tags: [Gallery]
+ *     responses:
+ *       200:
+ *         description: A list of gallery images
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *   post:
+ *     summary: Create a new gallery image
+ *     tags: [Gallery]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: Gallery image created
+ *       500:
+ *         description: Error creating gallery image
+ *
+ * /api/gallery/{id}:
+ *   get:
+ *     summary: Get a gallery image by ID
+ *     tags: [Gallery]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Gallery image found
+ *       404:
+ *         description: Gallery image not found
+ *   put:
+ *     summary: Update a gallery image by ID
+ *     tags: [Gallery]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Gallery image updated
+ *       404:
+ *         description: Gallery image not found
+ *   delete:
+ *     summary: Delete a gallery image by ID
+ *     tags: [Gallery]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Gallery image deleted
+ *       404:
+ *         description: Gallery image not found
+ */
 
 // Get all gallery images
 const getAllGalleryImages: RequestHandler = async (_req, res) => {
@@ -22,10 +107,10 @@ const getAllGalleryImages: RequestHandler = async (_req, res) => {
 };
 
 // Get gallery image by ID
-const getGalleryImageById: RequestHandler<GalleryImageParams> = async (req, res) => {
+const getGalleryImageById: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event']
     });
     if (!galleryImage) {
@@ -50,10 +135,10 @@ const createGalleryImage: RequestHandler = async (req, res) => {
 };
 
 // Update gallery image
-const updateGalleryImage: RequestHandler<GalleryImageParams> = async (req, res) => {
+const updateGalleryImage: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event']
     });
     if (!galleryImage) {
@@ -69,10 +154,10 @@ const updateGalleryImage: RequestHandler<GalleryImageParams> = async (req, res) 
 };
 
 // Delete gallery image
-const deleteGalleryImage: RequestHandler<GalleryImageParams> = async (req, res) => {
+const deleteGalleryImage: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: parseInt(req.params.id) },
+      where: { id: req.params.id },
       relations: ['event']
     });
     if (!galleryImage) {
@@ -88,8 +173,8 @@ const deleteGalleryImage: RequestHandler<GalleryImageParams> = async (req, res) 
 
 router.get('/', getAllGalleryImages);
 router.get('/:id', getGalleryImageById);
-router.post('/', createGalleryImage);
-router.put('/:id', updateGalleryImage);
-router.delete('/:id', deleteGalleryImage);
+router.post('/', authenticateJWT, createGalleryImage);
+router.put('/:id', authenticateJWT, updateGalleryImage);
+router.delete('/:id', authenticateJWT, deleteGalleryImage);
 
 export default router; 

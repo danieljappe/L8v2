@@ -6,8 +6,8 @@ import { GalleryImage } from './GalleryImage';
 
 @Entity()
 export class Event {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   title!: string;
