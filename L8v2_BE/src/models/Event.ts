@@ -21,8 +21,8 @@ export class Event {
   @Column()
   startTime!: string;
 
-  @Column()
-  endTime!: string;
+  @Column({ nullable: true })
+  endTime?: string;
 
   @Column()
   ticketPrice!: number;
@@ -48,9 +48,9 @@ export class Event {
   @Column({ default: 0 })
   currentAttendees!: number;
 
-  @ManyToOne(() => Venue, venue => venue.events)
+  @ManyToOne(() => Venue, venue => venue.events, { nullable: true })
   @JoinColumn()
-  venue!: Venue;
+  venue?: Venue;
 
   @OneToMany(() => EventArtist, eventArtist => eventArtist.event)
   eventArtists!: EventArtist[];

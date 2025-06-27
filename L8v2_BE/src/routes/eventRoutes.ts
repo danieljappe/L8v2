@@ -150,7 +150,7 @@ const updateEvent: RequestHandler = async (req, res) => {
   try {
     const event = await eventRepository.findOne({
       where: { id: req.params.id },
-      relations: ['venue', 'artists']
+      relations: ['venue', 'eventArtists', 'eventArtists.artist']
     });
     if (!event) {
       res.status(404).json({ message: 'Event not found' });
@@ -159,8 +159,9 @@ const updateEvent: RequestHandler = async (req, res) => {
     eventRepository.merge(event, req.body);
     const result = await eventRepository.save(event);
     res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating event' });
+  } catch (error: any) {
+    console.error('Error updating event:', error);
+    res.status(500).json({ message: 'Error updating event', error: error.message });
   }
 };
 
@@ -169,7 +170,7 @@ const deleteEvent: RequestHandler = async (req, res) => {
   try {
     const event = await eventRepository.findOne({
       where: { id: req.params.id },
-      relations: ['venue', 'artists']
+      relations: ['venue', 'eventArtists', 'eventArtists.artist']
     });
     if (!event) {
       res.status(404).json({ message: 'Event not found' });
@@ -177,8 +178,9 @@ const deleteEvent: RequestHandler = async (req, res) => {
     }
     await eventRepository.remove(event);
     res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting event' });
+  } catch (error: any) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ message: 'Error deleting event', error: error.message });
   }
 };
 

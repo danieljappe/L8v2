@@ -18,6 +18,8 @@ import contactMessageRoutes from './routes/contactMessageRoutes';
 import dotenv from 'dotenv';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import authRoutes from './routes/authRoutes';
+import path from 'path';
 
 dotenv.config();
 
@@ -28,6 +30,9 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded images statically
+app.use('/uploads/gallery', express.static(path.join(__dirname, '../uploads/gallery')));
 
 // Request logging middleware
 app.use(requestLogger);
@@ -65,6 +70,7 @@ app.use('/api/event-artists', eventArtistRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/gallery', galleryImageRoutes);
 app.use('/api/contact', contactMessageRoutes);
+app.use('/api/auth', authRoutes);
 
 // Swagger setup
 const swaggerOptions = {
