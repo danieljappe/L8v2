@@ -1,12 +1,9 @@
-import { Router, RequestHandler, Request, Response } from 'express';
+import { Router, RequestHandler } from 'express';
 import { AppDataSource } from '../config/database';
 import { GalleryImage } from '../models/GalleryImage';
 import { authenticateJWT } from '../middleware/authMiddleware';
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
 
-const router: any = Router();
+const router = Router();
 const galleryImageRepository = AppDataSource.getRepository(GalleryImage);
 
 interface GalleryImageParams {
@@ -97,22 +94,6 @@ interface GalleryImageParams {
  *         description: Gallery image not found
  */
 
-// Multer setup for image uploads
-const uploadDir = path.join(__dirname, '../../uploads/gallery');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  }
-});
-const upload = multer({ storage });
-
 // Get all gallery images
 const getAllGalleryImages: RequestHandler = async (_req, res) => {
   try {
@@ -189,20 +170,6 @@ const deleteGalleryImage: RequestHandler = async (req, res) => {
     res.status(500).json({ message: 'Error deleting gallery image' });
   }
 };
-
-// Image upload endpoint
-router.post('/upload', upload.single('image'), (req: Request, res: Response) => {
-  const file = req.file as Express.Multer.File | undefined;
-  if (!file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
-  const fileUrl = `/uploads/gallery/${file.filename}`;
-  res.status(201).json({
-    filename: file.filename,
-    path: file.path,
-    url: fileUrl
-  });
-});
 
 router.get('/', getAllGalleryImages);
 router.get('/:id', getGalleryImageById);
