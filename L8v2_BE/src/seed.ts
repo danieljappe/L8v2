@@ -219,10 +219,10 @@ async function seed() {
     console.log('📸 Seeding gallery images...');
     const galleryImageRepo = AppDataSource.getRepository(GalleryImage);
     const galleryImages = await Promise.all([
-      galleryImageRepo.create({ filename: 'rocknight.jpg', url: '/images/rocknight.jpg', caption: 'Rock Night Crowd', photographer: 'Alice', category: GalleryCategory.EVENT, isPublished: true, event: events[0] }),
-      galleryImageRepo.create({ filename: 'electrofest.jpg', url: '/images/electrofest.jpg', caption: 'DJ Spin Live', photographer: 'Bob', category: GalleryCategory.EVENT, isPublished: true, event: events[1] }),
-      galleryImageRepo.create({ filename: 'jazzclub.jpg', url: '/images/jazzclub.jpg', caption: 'Jazz Cats on Stage', photographer: 'Carol', category: GalleryCategory.EVENT, isPublished: true, event: events[2] }),
-      galleryImageRepo.create({ filename: 'popgala.jpg', url: '/images/popgala.jpg', caption: 'Pop Stars Performance', photographer: 'Dave', category: GalleryCategory.EVENT, isPublished: true, event: events[0] }),
+      galleryImageRepo.create({ filename: 'rocknight.jpg', url: '/images/rocknight.jpg', caption: 'Rock Night Crowd', photographer: 'Alice', category: GalleryCategory.EVENT, isPublished: true, eventId: events[0].id }),
+      galleryImageRepo.create({ filename: 'electrofest.jpg', url: '/images/electrofest.jpg', caption: 'DJ Spin Live', photographer: 'Bob', category: GalleryCategory.EVENT, isPublished: true, eventId: events[1].id }),
+      galleryImageRepo.create({ filename: 'jazzclub.jpg', url: '/images/jazzclub.jpg', caption: 'Jazz Cats on Stage', photographer: 'Carol', category: GalleryCategory.EVENT, isPublished: true, eventId: events[2].id }),
+      galleryImageRepo.create({ filename: 'popgala.jpg', url: '/images/popgala.jpg', caption: 'Pop Stars Performance', photographer: 'Dave', category: GalleryCategory.EVENT, isPublished: true, eventId: events[0].id }),
     ].map(async gi => {
       let existing = await galleryImageRepo.findOneBy({ filename: gi.filename });
       if (!existing) {

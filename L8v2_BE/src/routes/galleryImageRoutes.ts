@@ -97,9 +97,7 @@ interface GalleryImageParams {
 // Get all gallery images
 const getAllGalleryImages: RequestHandler = async (_req, res) => {
   try {
-    const galleryImages = await galleryImageRepository.find({
-      relations: ['event']
-    });
+    const galleryImages = await galleryImageRepository.find();
     res.json(galleryImages);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching gallery images' });
@@ -110,8 +108,7 @@ const getAllGalleryImages: RequestHandler = async (_req, res) => {
 const getGalleryImageById: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: req.params.id },
-      relations: ['event']
+      where: { id: req.params.id }
     });
     if (!galleryImage) {
       res.status(404).json({ message: 'Gallery image not found' });
@@ -138,8 +135,7 @@ const createGalleryImage: RequestHandler = async (req, res) => {
 const updateGalleryImage: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: req.params.id },
-      relations: ['event']
+      where: { id: req.params.id }
     });
     if (!galleryImage) {
       res.status(404).json({ message: 'Gallery image not found' });
@@ -157,8 +153,7 @@ const updateGalleryImage: RequestHandler = async (req, res) => {
 const deleteGalleryImage: RequestHandler = async (req, res) => {
   try {
     const galleryImage = await galleryImageRepository.findOne({
-      where: { id: req.params.id },
-      relations: ['event']
+      where: { id: req.params.id }
     });
     if (!galleryImage) {
       res.status(404).json({ message: 'Gallery image not found' });

@@ -10,7 +10,7 @@ export class GalleryImageRepository extends BaseRepository<GalleryImage> {
   async findByEvent(eventId: string): Promise<GalleryImage[]> {
     return this.repository.find({
       where: {
-        event: { id: eventId }
+        eventId
       }
     });
   }

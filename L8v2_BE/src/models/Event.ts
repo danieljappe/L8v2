@@ -58,9 +58,6 @@ export class Event {
   @OneToMany(() => Ticket, ticket => ticket.event)
   tickets!: Ticket[];
 
-  @OneToMany(() => GalleryImage, galleryImage => galleryImage.event)
-  galleryImages!: GalleryImage[];
-
   @CreateDateColumn()
   createdAt!: Date;
 

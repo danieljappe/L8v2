@@ -31,9 +31,8 @@ export class GalleryImage {
   @Column({ nullable: true })
   caption?: string;
 
-  @ManyToOne(() => Event, event => event.galleryImages)
-  @JoinColumn()
-  event!: Event;
+  @Column({ nullable: true })
+  eventId?: string;
 
   @Column({ nullable: true })
   photographer?: string;
